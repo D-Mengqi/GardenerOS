@@ -1,4 +1,3 @@
-cat <<'EOF' > src/sbi.rs
 #![allow(unused)]
 
 use core::arch::asm;
