@@ -12,7 +12,7 @@ pub fn write(fd: usize, buf: &[u8]) -> isize { sys_write(fd, buf) }
 pub fn exit(exit_code: i32) -> isize { sys_exit(exit_code) }
 
 fn clear_bss() {
-    extern "C" {
+    unsafe extern "C" {
         fn start_bss();
         fn end_bss();
     }
@@ -21,8 +21,8 @@ fn clear_bss() {
     (start_bss_ptr..end_bss_ptr).for_each(|a| unsafe { (a as *mut u8).write_volatile(0) });
 }
 
-#[no_mangle]
-#[link_section = ".text.entry"]
+#[unsafe (no_mangle)]
+#[unsafe (link_section = ".text.entry")]
 pub extern "C" fn _start() -> ! {
     clear_bss();
     exit(main());
@@ -30,7 +30,7 @@ pub extern "C" fn _start() -> ! {
 }
 
 #[linkage = "weak"]
-#[no_mangle]
+#[unsafe (no_mangle)]
 fn main() -> i32 {
     panic!("Cannot find main!");
 }
